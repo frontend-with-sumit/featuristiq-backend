@@ -1,21 +1,34 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { z } from "zod";
 
-type Project = z.infer<typeof project>;
+interface Project extends Document {
+	name: string;
+	description?: string;
+}
 
-const project = z.object({
+const projectSchema = new Schema(
+	{
+		name: { type: String, required: true },
+		description: { type: String },
+	},
+	{ versionKey: false }
+);
+
+const Project = mongoose.model<Project>("Project", projectSchema);
+
+const projectValidationSchema = z.object({
 	name: z.string({ required_error: "Name is required" }).min(5).max(255),
 	description: z.string().min(5).max(255).optional(),
 });
 
-const projectSchema = new Schema<Project>({
-	name: { type: String, required: true },
-	description: { type: String },
-});
-
-const Project = mongoose.model<Project>("Project", projectSchema);
-
-const validateData = (data: Project) => project.safeParse(data);
+const validateData = (
+	data: z.infer<typeof projectValidationSchema>,
+	type: "POST" | "PATCH"
+) =>
+	(type === "POST"
+		? projectValidationSchema
+		: projectValidationSchema.partial()
+	).safeParse(data);
 
 export { validateData };
 export default Project;

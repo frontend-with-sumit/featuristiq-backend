@@ -1,4 +1,4 @@
-import { ErrorDetail, Nullable } from "../Types/types";
+import { ErrorDetail, Nullable, Undefined } from "../Types/types";
 
 enum SuccessCode {
 	GET = 200,
@@ -34,33 +34,31 @@ type Requests =
 	| "DELETE"
 	| "UNAUTH"
 	| "FORBID"
-	| "ISE";
+	| "ISE"
+	| "OTHER";
 
 type ResponseType = "success" | "error";
 
 const responseWithMessage = ({
 	code,
 	message,
-	type = "success",
 }: {
-	code: number;
-	message: string;
-	type?: ResponseType;
+	code?: number;
+	message?: string;
 }) => ({
 	code,
 	...(message ? { message } : {}),
-	...(type === "error" ? { error: true } : {}),
 });
 
 const responseWithData = ({
 	code,
 	items,
-	errorItems,
+	errors,
 	type = "success",
 }: {
 	code: number;
 	items?: Array<object> | object;
-	errorItems?: ErrorDetail[];
+	errors?: ErrorDetail[];
 	type?: ResponseType;
 }) => ({
 	code,
@@ -68,44 +66,33 @@ const responseWithData = ({
 		? { data: items }
 		: {
 				message: "Validation errors in your request",
-				details: errorItems,
+				details: errors,
 		  }),
 });
 
 const generateSuccessResponse = (
 	requestType: Requests,
 	items: Array<object> | object
-): Nullable<Response> => {
+): Response => {
 	switch (requestType) {
-		case "GET":
-			return responseWithData({
-				code: SuccessCode[requestType],
-				items,
-			});
-
-		case "POST":
-			return responseWithMessage({
-				code: SuccessCode[requestType],
-				message: "The item was created successfully",
-			});
-
-		case "PATCH":
-			return responseWithMessage({
-				code: SuccessCode[requestType],
-				message: "The item was updated successfully",
-			});
-
 		case "DELETE":
 			return responseWithMessage({
 				code: SuccessCode[requestType],
-				message: "The item was deleted successfully",
+				message: "The item deleted successfully",
 			});
 		default:
-			return null;
+			return responseWithData({
+				code: (SuccessCode as Record<Requests, number>)[requestType],
+				items,
+			});
 	}
 };
-
-const generateErrorResponse = (requestType: Requests, items: ErrorDetail[]) => {
+const generateErrorResponse = (
+	requestType: Requests,
+	items: ErrorDetail[],
+	code: Undefined<number>,
+	message: Undefined<string>
+): Response => {
 	switch (requestType) {
 		case "GET":
 		case "DELETE":
@@ -118,7 +105,7 @@ const generateErrorResponse = (requestType: Requests, items: ErrorDetail[]) => {
 		case "PATCH_1":
 			return responseWithData({
 				code: ErrorCode[requestType],
-				errorItems: items,
+				errors: items,
 				type: "error",
 			});
 		case "UNAUTH":
@@ -132,7 +119,11 @@ const generateErrorResponse = (requestType: Requests, items: ErrorDetail[]) => {
 				message:
 					"The request is understood, but it has been refused or access is not allowed",
 			});
-
+		case "OTHER":
+			return responseWithMessage({
+				code,
+				message,
+			});
 		default:
 			return responseWithMessage({
 				code: ErrorCode.ISE,
@@ -142,11 +133,15 @@ const generateErrorResponse = (requestType: Requests, items: ErrorDetail[]) => {
 };
 
 const generateResponse = ({
+	code,
+	message,
 	requestType,
 	responseType,
 	items = [],
 	errors = [],
 }: {
+	code?: number;
+	message?: string;
 	requestType: Requests;
 	responseType: ResponseType;
 	items?: Array<object> | object;
@@ -154,7 +149,7 @@ const generateResponse = ({
 }) => {
 	return responseType === "success"
 		? generateSuccessResponse(requestType, items)
-		: generateErrorResponse(requestType, errors);
+		: generateErrorResponse(requestType, errors, code, message);
 };
 
 export default generateResponse;
