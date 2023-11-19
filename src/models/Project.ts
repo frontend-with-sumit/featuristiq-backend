@@ -21,6 +21,13 @@ const projectValidationSchema = z.object({
 	description: z.string().min(5).max(255).optional(),
 });
 
+/**
+ * Validate the request body as per the schema rules.
+ * ```type``` is important, based on that different validation rules are applied on the data
+ * @param data - Request body
+ * @param type - Request type, can be either POST or PATCH
+ * @returns zod safeParse object
+ */
 const validateData = (
 	data: z.infer<typeof projectValidationSchema>,
 	type: "POST" | "PATCH"

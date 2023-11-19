@@ -85,7 +85,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostErrorResponse"
+									"$ref": "#/components/schemas/MessageResponse"
 								}
 							}
 						}
@@ -188,7 +188,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostErrorResponse"
+									"$ref": "#/components/schemas/MessageResponse"
 								}
 							}
 						}
