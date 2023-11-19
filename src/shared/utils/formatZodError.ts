@@ -1,7 +1,7 @@
 import { ZodIssue } from "zod";
 import { generateErrorMessage, ErrorMessageOptions } from "zod-error";
 
-import { ErrorDetail } from "../Types/types";
+import { ErrorDetail } from "../types";
 
 const options: ErrorMessageOptions = {
 	delimiter: { error: "," },
