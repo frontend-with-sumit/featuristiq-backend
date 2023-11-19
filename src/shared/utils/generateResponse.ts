@@ -3,8 +3,8 @@ import { ErrorDetail, Nullable, Undefined } from "../Types/types";
 enum SuccessCode {
 	GET = 200,
 	POST = 201,
-	PATCH = 204,
-	DELETE = 204,
+	PATCH = 200,
+	DELETE = 200,
 }
 
 enum ErrorCode {
@@ -22,7 +22,7 @@ type Response = {
 	code?: number;
 	data?: Array<object> | object;
 	message?: string;
-	details?: ErrorDetail[];
+	errors?: ErrorDetail[];
 };
 
 type Requests =
@@ -66,7 +66,7 @@ const responseWithData = ({
 		? { data: items }
 		: {
 				message: "Validation errors in your request",
-				details: errors,
+				errors,
 		  }),
 });
 
