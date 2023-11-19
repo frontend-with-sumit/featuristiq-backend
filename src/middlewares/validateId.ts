@@ -2,6 +2,10 @@ import { Request, NextFunction, Response } from "express";
 import mongoose from "mongoose";
 import generateResponse from "../shared/utils/generateResponse";
 
+/**
+ * Middleware to validate the id in the url.
+ * If the ```id``` is not a valid MONGODB_OBJECT_ID, return 400 error.
+ */
 const validateObjectId = (req: Request, res: Response, next: NextFunction) => {
 	const id = req.params.id;
 

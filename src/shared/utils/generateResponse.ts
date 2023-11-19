@@ -1,4 +1,4 @@
-import { ErrorDetail, Nullable, Undefined } from "../Types/types";
+import { ErrorDetail, Nullable, Requests, Undefined } from "../Types/types";
 
 enum SuccessCode {
 	GET = 200,
@@ -11,8 +11,8 @@ enum ErrorCode {
 	GET = 404,
 	DELETE = 404,
 	POST = 400,
-	PATCH_1 = 400,
-	PATCH_2 = 404,
+	PATCH = 400,
+	PATCH_1 = 404,
 	UNAUTH = 401,
 	FORBID = 403,
 	ISE = 500,
@@ -24,18 +24,6 @@ type Response = {
 	message?: string;
 	errors?: ErrorDetail[];
 };
-
-type Requests =
-	| "GET"
-	| "POST"
-	| "PATCH"
-	| "PATCH_1"
-	| "PATCH_2"
-	| "DELETE"
-	| "UNAUTH"
-	| "FORBID"
-	| "ISE"
-	| "OTHER";
 
 type ResponseType = "success" | "error";
 
@@ -96,13 +84,13 @@ const generateErrorResponse = (
 	switch (requestType) {
 		case "GET":
 		case "DELETE":
-		case "PATCH_2":
+		case "PATCH_1":
 			return responseWithMessage({
 				code: ErrorCode[requestType],
 				message: "The item does not exist",
 			});
 		case "POST":
-		case "PATCH_1":
+		case "PATCH":
 			return responseWithData({
 				code: ErrorCode[requestType],
 				errors: items,
