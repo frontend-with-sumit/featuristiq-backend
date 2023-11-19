@@ -14,6 +14,10 @@
 		{
 			"name": "Projects",
 			"description": "APIs for handling projects built by the user"
+		},
+		{
+			"name": "Environments",
+			"description": "APIs for handling environments built by the user"
 		}
 	],
 	"paths": {
@@ -50,11 +54,10 @@
 				"tags": ["Projects"],
 				"operationId": "addProject",
 				"requestBody": {
-					"description": "Create a new project",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Project"
+								"$ref": "#/components/schemas/ProjectInput"
 							}
 						}
 					},
@@ -93,15 +96,15 @@
 				}
 			}
 		},
-		"/api/projects/{project_id}": {
+		"/api/projects/{id}": {
 			"get": {
 				"tags": ["Projects"],
 				"operationId": "getProjectById",
 				"parameters": [
 					{
-						"name": "project_id",
+						"name": "id",
 						"in": "path",
-						"description": "Unique project id of the project",
+						"description": "Unique id of the project",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -145,9 +148,9 @@
 				"operationId": "updateProject",
 				"parameters": [
 					{
-						"name": "project_id",
+						"name": "id",
 						"in": "path",
-						"description": "Unique project id of the project",
+						"description": "Unique id of the project",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -158,7 +161,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Project"
+								"$ref": "#/components/schemas/ProjectInput"
 							}
 						}
 					}
@@ -210,9 +213,234 @@
 				"operationId": "deleteProject",
 				"parameters": [
 					{
-						"name": "project_id",
+						"name": "id",
 						"in": "path",
-						"description": "Unique project id of the project",
+						"description": "Unique id of the project",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/envs": {
+			"get": {
+				"tags": ["Environments"],
+				"operationId": "listEnvs",
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/EnvResponse"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Environments"],
+				"operationId": "addEnv",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EnvInput"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/EnvResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/envs/{id}": {
+			"get": {
+				"tags": ["Environments"],
+				"operationId": "getEnvById",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the environment",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/EnvResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Item not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["Environments"],
+				"operationId": "updateEnv",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the environment",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EnvInput"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/EnvResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Item not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Environments"],
+				"operationId": "deleteEnv",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the environment",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -296,13 +524,38 @@
 					}
 				}
 			},
-			"Project": {
+			"EnvResponse": {
+				"type": "object",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				}
+			},
+			"ProjectInput": {
 				"type": "object",
 				"properties": {
 					"name": {
 						"type": "string"
 					},
 					"description": {
+						"type": "string"
+					}
+				}
+			},
+			"EnvInput": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"url": {
 						"type": "string"
 					}
 				}
