@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { validateData } from "../models/Project";
 import validateObjectId from "../middlewares/validateId";
+import { validateBody } from "../middlewares/validateBody";
 
 import {
 	createProject,
@@ -9,7 +10,6 @@ import {
 	getProjects,
 	updateProject,
 } from "../controllers/project.controller";
-import { validateBody } from "../middlewares/validateBody";
 
 const router: Router = express.Router();
 
