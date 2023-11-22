@@ -15,7 +15,7 @@ const validateObjectId = (req: Request, res: Response, next: NextFunction) => {
 				requestType: "OTHER",
 				responseType: "error",
 				code: 400,
-				message: "Invalid ID",
+				message: "Invalid ID format",
 			})
 		);
 

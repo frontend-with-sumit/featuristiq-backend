@@ -535,6 +535,9 @@
 					},
 					"url": {
 						"type": "string"
+					},
+					"projectId": {
+						"type": "string"
 					}
 				}
 			},
@@ -556,6 +559,9 @@
 						"type": "string"
 					},
 					"url": {
+						"type": "string"
+					},
+					"projectId": {
 						"type": "string"
 					}
 				}

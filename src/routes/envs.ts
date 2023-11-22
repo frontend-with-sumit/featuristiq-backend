@@ -1,18 +1,17 @@
-import express from "express";
-
-import {
-	createEnv,
-	deleteEnv,
-	getEnvById,
-	getEnvs,
-	updateEnv,
-} from "../controllers/envs.controller";
-
+import express, { Router } from "express";
+import { validateData } from "../models/Env";
 import validateObjectId from "../middlewares/validateId";
 import { validateBody } from "../middlewares/validateBody";
-import { validateData } from "../models/Env";
 
-const router = express.Router();
+import {
+	getEnvs,
+	getEnvById,
+	createEnv,
+	updateEnv,
+	deleteEnv,
+} from "../controllers/envs.controller";
+
+const router: Router = express.Router();
 
 router.get("/", getEnvs);
 
