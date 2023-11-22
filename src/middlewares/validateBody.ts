@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import formatZodError from "../shared/utils/formatZodError";
 import generateResponse from "../shared/utils/generateResponse";
-import { Requests } from "../shared/Types/types";
+import { Requests } from "../shared/types";
 
 /**
  * Curried middleware to validate the request body.

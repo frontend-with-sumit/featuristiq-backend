@@ -1,4 +1,4 @@
-import { ErrorDetail, Nullable, Requests, Undefined } from "../Types/types";
+import { ErrorDetail, Nullable, Requests, Undefined } from "../types";
 
 enum SuccessCode {
 	GET = 200,

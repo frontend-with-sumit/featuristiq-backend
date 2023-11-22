@@ -157,7 +157,6 @@ const deleteEnv = async (req: Request, res: Response) => {
 export {
 	getEnvs,
 	getEnvById,
-	getEnvByProjectId,
 	createEnv,
 	updateEnv,
 	deleteEnv,

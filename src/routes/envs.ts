@@ -4,11 +4,11 @@ import validateObjectId from "../middlewares/validateId";
 import { validateBody } from "../middlewares/validateBody";
 
 import {
-	createEnv,
-	deleteEnv,
-	getEnvById,
 	getEnvs,
+	getEnvById,
+	createEnv,
 	updateEnv,
+	deleteEnv,
 } from "../controllers/envs.controller";
 
 const router: Router = express.Router();

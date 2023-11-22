@@ -17,7 +17,7 @@ const getProjects = async (req: Request, res: Response) => {
 };
 
 /**
- * Get a project based on the id
+ * Get a project based on the id.
  * If the project is not found, return 404 error
  */
 const getProjectById = async (req: Request, res: Response) => {
