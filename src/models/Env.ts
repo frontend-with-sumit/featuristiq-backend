@@ -9,8 +9,8 @@ interface Env extends Document {
 
 const envSchema = new Schema(
 	{
-		name: { type: String, required: true },
-		url: { type: String, required: true },
+		name: { type: String, required: true, trim: true },
+		url: { type: String, required: true, trim: true },
 		projectId: { type: mongoose.Schema.Types.ObjectId, required: true },
 	},
 	{ versionKey: false }
@@ -19,11 +19,12 @@ const envSchema = new Schema(
 const Envs = mongoose.model<Env>("env", envSchema);
 
 const envValidationSchema = z.object({
-	name: z.string({ required_error: "Name is required" }).max(50),
+	name: z.string({ required_error: "Name is required" }).max(50).trim(),
 	url: z
 		.string({ required_error: "URL is required" })
 		.url({ message: "Invalid URL" })
-		.max(255),
+		.max(255)
+		.trim(),
 	projectId: z
 		.string({ required_error: "A valid project id is required" })
 		.refine((value) => /^[0-9a-fA-F]{24}$/.test(value), {
