@@ -12,6 +12,10 @@
 	],
 	"tags": [
 		{
+			"name": "Users",
+			"description": "APIs for handling users"
+		},
+		{
 			"name": "Projects",
 			"description": "APIs for handling projects built by the user"
 		},
@@ -21,6 +25,120 @@
 		}
 	],
 	"paths": {
+		"/api/auth": {
+			"post": {
+				"tags": ["Users"],
+				"operationId": "loginUser",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginInput"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/LoginResponse"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/me": {
+			"get": {
+				"tags": ["Users"],
+				"operationId": "fetchUserDetail",
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/UserResponse"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/user/register": {
+			"post": {
+				"tags": ["Users"],
+				"operationId": "registerUser",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterInput"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/UserResponse"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/projects": {
 			"get": {
 				"tags": ["Projects"],
@@ -510,6 +628,43 @@
 					}
 				}
 			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string"
+					}
+				}
+			},
+			"UserResponse": {
+				"type": "object",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					},
+					"usage": {
+						"type": "string"
+					},
+					"personal_email": {
+						"type": "string"
+					},
+					"work_email": {
+						"type": "string"
+					},
+					"company_name": {
+						"type": "string"
+					},
+					"phone_number": {
+						"type": "string"
+					}
+				}
+			},
 			"ProjectResponse": {
 				"type": "object",
 				"properties": {
@@ -537,6 +692,44 @@
 						"type": "string"
 					},
 					"projectId": {
+						"type": "string"
+					}
+				}
+			},
+			"RegisterInput": {
+				"type": "object",
+				"properties": {
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					},
+					"usage": {
+						"type": "string",
+						"enum": ["personal", "company"]
+					},
+					"personal_email": {
+						"type": "string"
+					},
+					"work_email": {
+						"type": "string"
+					},
+					"company_name": {
+						"type": "string"
+					},
+					"phone_number": {
+						"type": "string"
+					}
+				}
+			},
+			"LoginInput": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
 						"type": "string"
 					}
 				}
