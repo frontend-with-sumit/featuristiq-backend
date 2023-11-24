@@ -88,6 +88,7 @@ const registerUser = async (req: Request, res: Response) => {
 			requestType: "POST",
 			responseType: "success",
 			items: pick(user, [
+				"_id",
 				"first_name",
 				"last_name",
 				...(usage === "personal"
