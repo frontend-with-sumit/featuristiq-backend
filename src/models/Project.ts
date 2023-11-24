@@ -8,8 +8,8 @@ interface Project extends Document {
 
 const projectSchema = new Schema(
 	{
-		name: { type: String, required: true },
-		description: { type: String },
+		name: { type: String, required: true, trim: true },
+		description: { type: String, trim: true },
 	},
 	{ versionKey: false }
 );
@@ -17,8 +17,8 @@ const projectSchema = new Schema(
 const Project = mongoose.model<Project>("Project", projectSchema);
 
 const projectValidationSchema = z.object({
-	name: z.string({ required_error: "Name is required" }).min(5).max(255),
-	description: z.string().min(5).max(255).optional(),
+	name: z.string({ required_error: "Name is required" }).min(5).max(255).trim(),
+	description: z.string().min(5).max(255).trim().optional(),
 });
 
 /**
