@@ -1,6 +1,0 @@
-{
-	"DB_URI": "mongodb://localhost:27017/featuristiq",
-	"PORT": 4000,
-	"JWT_PRIVATE_KEY": "06ca95c9e3a57662458d45937101852b997fd8025d9f47394bd698fb2a582a5b",
-	"SALT": 10
-}
