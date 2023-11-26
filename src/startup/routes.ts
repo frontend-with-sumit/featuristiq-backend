@@ -3,10 +3,13 @@ import parser from "body-parser";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from "../../swagger.json";
 
-import auth from "../routes/auth";
-import users from "../routes/users";
-import projects from "../routes/projects";
-import envs from "../routes/envs";
+import auth from "../middlewares/auth";
+
+import authRoutes from "../routes/auth";
+import userRoutes from "../routes/users";
+import projectRoutes from "../routes/projects";
+import envRoutes from "../routes/envs";
+import flagRoutes from "../routes/flags";
 
 export default function routes(app: Express) {
 	app.use(parser.json());
@@ -19,16 +22,22 @@ export default function routes(app: Express) {
 	/**
 	 * User
 	 */
-	app.use("/api/auth", auth);
-	app.use("/api/user", users);
+	app.use("/api/auth", authRoutes);
+	app.use("/api/user", userRoutes);
 
 	/**
 	 * Project
 	 */
-	app.use("/api/projects", projects);
+	app.use("/api/projects", projectRoutes);
 
 	/**
 	 * Environment
 	 */
-	app.use("/api/envs", envs);
+	app.use("/api/envs", envRoutes);
+
+	app.use(auth);
+	/**
+	 * Flags
+	 */
+	app.use("/api/flags", flagRoutes);
 }
