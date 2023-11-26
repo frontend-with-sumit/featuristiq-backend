@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Envs from "../models/Env";
 import generateResponse from "../shared/utils/generateResponse";
+import { validObjectId } from "../shared/utils/validObjectId";
 
 /**
  * Get a list of all the envs created by the user
@@ -49,7 +50,7 @@ const getEnvById = async (req: Request, res: Response) => {
 const getEnvByProjectId = async (req: Request, res: Response) => {
 	const id = req.query.projectId?.toString();
 
-	if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+	if (!id || !validObjectId(id)) {
 		return res.status(400).send(
 			generateResponse({
 				requestType: "OTHER",
@@ -154,10 +155,4 @@ const deleteEnv = async (req: Request, res: Response) => {
 	);
 };
 
-export {
-	getEnvs,
-	getEnvById,
-	createEnv,
-	updateEnv,
-	deleteEnv,
-};
+export { getEnvs, getEnvById, createEnv, updateEnv, deleteEnv };

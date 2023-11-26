@@ -7,13 +7,13 @@ import User from "../models/User";
 import generateResponse from "../shared/utils/generateResponse";
 import { Nullable } from "../shared/types";
 
-interface UserInterface {
+interface IUser {
 	_id: string;
 	usage: string;
 }
 
-interface CustomRequest extends Request {
-	user?: Nullable<UserInterface>;
+export interface CustomRequest extends Request {
+	user?: Nullable<IUser>;
 }
 
 const getUser = async (req: CustomRequest, res: Response) => {
