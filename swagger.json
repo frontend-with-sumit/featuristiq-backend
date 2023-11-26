@@ -22,6 +22,10 @@
 		{
 			"name": "Environments",
 			"description": "APIs for handling environments built by the user"
+		},
+		{
+			"name": "Flags",
+			"description": "APIs for handling flags associated with projects"
 		}
 	],
 	"paths": {
@@ -588,6 +592,231 @@
 					}
 				}
 			}
+		},
+		"/api/flags": {
+			"get": {
+				"tags": ["Flags"],
+				"operationId": "listFlags",
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/FlagResponse"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Flags"],
+				"operationId": "addFlag",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FlagInput"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/FlagResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/flags/{id}": {
+			"get": {
+				"tags": ["Flags"],
+				"operationId": "getFlagById",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the flag",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/FlagResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Item not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["Flags"],
+				"operationId": "updateFlag",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the flag",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FlagInput"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/FlagResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Item not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Flags"],
+				"operationId": "deleteFlag",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the flag",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -696,6 +925,35 @@
 					}
 				}
 			},
+			"FlagResponse": {
+				"type": "object",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"envs": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"project_id": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				}
+			},
 			"RegisterInput": {
 				"type": "object",
 				"properties": {
@@ -755,6 +1013,20 @@
 						"type": "string"
 					},
 					"projectId": {
+						"type": "string"
+					}
+				}
+			},
+			"FlagInput": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"project_id": {
+						"type": "string"
+					},
+					"envs": {
 						"type": "string"
 					}
 				}
