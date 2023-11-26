@@ -1,5 +1,5 @@
 import express from "express";
-import auth from "../middlewares/auth";
+
 import { validateBody } from "../middlewares/validateBody";
 import { validateData } from "../models/Flag";
 import validateId from "../middlewares/validateId";
