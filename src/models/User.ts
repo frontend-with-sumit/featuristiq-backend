@@ -40,6 +40,7 @@ const userSchema = new Schema(
 	},
 	{
 		versionKey: false,
+		timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
 		methods: {
 			generateAuthToken() {
 				return jwt.sign(

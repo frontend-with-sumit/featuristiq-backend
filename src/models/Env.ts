@@ -13,7 +13,10 @@ const envSchema = new Schema(
 		url: { type: String, required: true, trim: true },
 		projectId: { type: mongoose.Schema.Types.ObjectId, required: true },
 	},
-	{ versionKey: false }
+	{
+		versionKey: false,
+		timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+	}
 );
 
 const Envs = mongoose.model<Env>("env", envSchema);

@@ -11,7 +11,10 @@ const projectSchema = new Schema(
 		name: { type: String, required: true, trim: true },
 		description: { type: String, trim: true },
 	},
-	{ versionKey: false }
+	{
+		versionKey: false,
+		timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+	}
 );
 
 const Project = mongoose.model<Project>("Project", projectSchema);
