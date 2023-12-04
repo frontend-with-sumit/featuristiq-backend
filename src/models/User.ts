@@ -14,6 +14,7 @@ interface User extends Document {
 	password: string;
 	is_admin: boolean;
 	generateAuthToken(): string;
+	generateRefreshToken(): string;
 }
 
 const userSchema = new Schema(
@@ -43,8 +44,20 @@ const userSchema = new Schema(
 		methods: {
 			generateAuthToken() {
 				return jwt.sign(
-					{ _id: this._id, usage: this?.usage, is_admin: this.is_admin },
-					config.get("JWT_PRIVATE_KEY")
+					{ _id: this?._id, usage: this?.usage, is_admin: this.is_admin },
+					config.get("JWT_PRIVATE_KEY") as string,
+					{ algorithm: "RS256", expiresIn: "20d" } // Valid for 2 days
+				);
+			},
+			generateRefreshToken() {
+				return jwt.sign(
+					{
+						_id: this?._id,
+						usage: this?.usage,
+						is_admin: this.is_admin,
+					},
+					config.get("JWT_PRIVATE_KEY") as string,
+					{ algorithm: "RS256", expiresIn: "300s" } // Valid for 5 mins
 				);
 			},
 		},

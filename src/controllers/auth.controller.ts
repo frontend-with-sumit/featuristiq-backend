@@ -32,14 +32,16 @@ const login = async (req: Request, res: Response) => {
 		);
 	}
 
-	const token = user.generateAuthToken();
+	const accessToken = user.generateAuthToken();
+	const refreshToken = user.generateRefreshToken();
 
-	res.header("x-auth-token", token).send(
+	res.header("Authorization", `Bearer ${accessToken}`).send(
 		generateResponse({
 			requestType: "POST",
 			responseType: "success",
 			items: {
-				token,
+				accessToken,
+				refreshToken,
 			},
 		})
 	);

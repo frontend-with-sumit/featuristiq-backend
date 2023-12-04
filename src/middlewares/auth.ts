@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "config";
 
 import generateResponse from "../shared/utils/generateResponse";
-import { Nullable } from "../shared/types";
+import { Nullable, Undefined } from "../shared/types";
 
 interface User {
 	_id: string;
@@ -15,7 +15,8 @@ interface CustomRequest extends Request {
 }
 
 const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
-	const token = req.header("x-auth-token");
+	const authHeader = req.header("Authorization");
+	const token: Undefined<string> = authHeader?.split(" ")[1];
 
 	if (!token) {
 		return res
@@ -24,11 +25,9 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
 	}
 
 	try {
-		const decodedToken: Nullable<JwtPayload> = jwt.decode(
-			token,
-			config.get("JWT_PRIVATE_KEY")
-		);
-
+		const decodedToken = jwt.verify(token, config.get("JWT_PUBLIC_KEY"), {
+			algorithms: ["RS256"],
+		}) as JwtPayload;
 		if (!decodedToken) throw new Error();
 
 		// Create a new object with the required properties
