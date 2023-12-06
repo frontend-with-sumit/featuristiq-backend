@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Project from "../models/Project";
 import generateResponse from "../shared/utils/generateResponse";
+import Flag from "../models/Flag";
 
 /**
  * Get a list of all the projects created by the user
@@ -100,7 +101,7 @@ const updateProject = async (req: Request, res: Response) => {
  * If the project is not found, return 404 error
  */
 const deleteProject = async (req: Request, res: Response) => {
-	const project = await Project.findByIdAndDelete(req.params.id);
+	const project = await Project.deleteOne({ _id: req.params.id });
 
 	if (!project)
 		return res

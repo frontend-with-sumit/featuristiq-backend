@@ -1,5 +1,8 @@
+import { NextFunction } from "express";
 import mongoose, { Document, Schema } from "mongoose";
 import { z } from "zod";
+import Flag from "./Flag";
+import Envs from "./Env";
 
 interface Project extends Document {
 	name: string;
@@ -14,6 +17,19 @@ const projectSchema = new Schema(
 	{
 		versionKey: false,
 		timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+	}
+);
+
+/**
+ * If a project is deleted then all the related flags and environments
+ * should also be deleted
+ */
+projectSchema.post(
+	"deleteOne",
+	{ query: true, document: false },
+	async function () {
+		await Flag.deleteMany({ project_id: this.getQuery()._id }).exec();
+		await Envs.deleteMany({ project_id: this.getQuery()._id }).exec();
 	}
 );
 
