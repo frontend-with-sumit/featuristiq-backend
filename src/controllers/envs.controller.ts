@@ -8,9 +8,9 @@ import { validObjectId } from "../shared/utils/validObjectId";
  * Get a list of all the envs created by the user
  */
 const getEnvs = async (req: Request, res: Response) => {
-	// If query params contains the projectId then fetch the environments
-	// based on the projectId else fetch all environments
-	if (req.query?.projectId) return getEnvByProjectId(req, res);
+	// If query params contains the project_id then fetch the environments
+	// based on the project_id else fetch all environments
+	if (req.query?.project_id) return getEnvByProjectId(req, res);
 
 	const envs = await Envs.find({});
 	return res.status(200).send(
@@ -48,7 +48,7 @@ const getEnvById = async (req: Request, res: Response) => {
  * If the environments are not found, return 404 error
  */
 const getEnvByProjectId = async (req: Request, res: Response) => {
-	const id = req.query.projectId?.toString();
+	const id = req.query.project_id?.toString();
 
 	if (!id || !validObjectId(id)) {
 		return res.status(400).send(
@@ -61,8 +61,8 @@ const getEnvByProjectId = async (req: Request, res: Response) => {
 		);
 	}
 
-	const projectId = mongoose.Types.ObjectId.createFromHexString(id);
-	const envs = await Envs.find({ projectId });
+	const project_id = mongoose.Types.ObjectId.createFromHexString(id);
+	const envs = await Envs.find({ project_id });
 
 	if (!envs.length)
 		return res
@@ -80,14 +80,14 @@ const getEnvByProjectId = async (req: Request, res: Response) => {
 
 /**
  * Creates a new env
- * Request body should contain 'name' and 'url'
+ * Request body should contain 'name' and 'domain'
  */
 const createEnv = async (req: Request, res: Response) => {
-	const { name, url, projectId } = req.body;
+	const { name, domain, project_id } = req.body;
 	const env = new Envs({
 		name,
-		url,
-		projectId,
+		domain,
+		project_id,
 	});
 	await env.save();
 
@@ -103,16 +103,16 @@ const createEnv = async (req: Request, res: Response) => {
 /**
  * Update an env based on the id
  * If the env is not found, return 404 error
- * Request body can either contain name, url or both
+ * Request body can either contain name, domain or both
  */
 const updateEnv = async (req: Request, res: Response) => {
-	const { name, url } = req.body;
+	const { name, domain } = req.body;
 	const env = await Envs.findByIdAndUpdate(
 		{ _id: req.params.id },
 		{
 			$set: {
 				name,
-				url,
+				domain,
 			},
 		},
 		{ new: true }
