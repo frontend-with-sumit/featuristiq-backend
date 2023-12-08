@@ -51,7 +51,7 @@ const createProject = async (req: CustomRequest, res: Response) => {
 	const project = new Project({
 		name,
 		description,
-		user_id: req?.user?._id,
+		created_by: req?.user?._id,
 	});
 	await project.save();
 
