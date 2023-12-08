@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Project from "../models/Project";
 import generateResponse from "../shared/utils/generateResponse";
 import Flag from "../models/Flag";
+import { CustomRequest } from "./user.controller";
 
 /**
  * Get a list of all the projects created by the user
@@ -45,11 +46,12 @@ const getProjectById = async (req: Request, res: Response) => {
  * Creates a new project
  * Request body should contain 'name' and 'description'
  */
-const createProject = async (req: Request, res: Response) => {
+const createProject = async (req: CustomRequest, res: Response) => {
 	const { name, description } = req.body;
 	const project = new Project({
 		name,
 		description,
+		user_id: req?.user?._id,
 	});
 	await project.save();
 

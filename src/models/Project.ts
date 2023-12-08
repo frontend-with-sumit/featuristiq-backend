@@ -7,12 +7,14 @@ import Envs from "./Env";
 interface Project extends Document {
 	name: string;
 	description?: string;
+	user_id: string;
 }
 
 const projectSchema = new Schema(
 	{
 		name: { type: String, required: true, trim: true },
 		description: { type: String, trim: true },
+		user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
 	},
 	{
 		versionKey: false,
