@@ -3,11 +3,12 @@ import Project from "../models/Project";
 import generateResponse from "../shared/utils/generateResponse";
 import Flag from "../models/Flag";
 import { CustomRequest } from "./user.controller";
+import { validObjectId } from "../shared/utils/validObjectId";
 
 /**
  * Get a list of all the projects created by the user
  */
-const getProjects = async (req: Request, res: Response) => {
+export const getProjects = async (req: Request, res: Response) => {
 	const projects = await Project.find({});
 	res.status(200).send(
 		generateResponse({
@@ -22,7 +23,7 @@ const getProjects = async (req: Request, res: Response) => {
  * Get a project based on the id.
  * If the project is not found, return 404 error
  */
-const getProjectById = async (req: Request, res: Response) => {
+export const getProjectById = async (req: Request, res: Response) => {
 	const project = await Project.findById({ _id: req.params.id });
 
 	if (!project)
@@ -46,7 +47,7 @@ const getProjectById = async (req: Request, res: Response) => {
  * Creates a new project
  * Request body should contain 'name' and 'description'
  */
-const createProject = async (req: CustomRequest, res: Response) => {
+export const createProject = async (req: CustomRequest, res: Response) => {
 	const { name, description } = req.body;
 	const project = new Project({
 		name,
@@ -69,7 +70,7 @@ const createProject = async (req: CustomRequest, res: Response) => {
  * If the project is not found, return 404 error
  * Request body can either contain name, description or both
  */
-const updateProject = async (req: Request, res: Response) => {
+export const updateProject = async (req: Request, res: Response) => {
 	const { name, description } = req.body;
 	const project = await Project.findByIdAndUpdate(
 		{ _id: req.params.id },
@@ -99,10 +100,61 @@ const updateProject = async (req: Request, res: Response) => {
 };
 
 /**
+ * Collaborators are users who can work on the flags in the
+ * project
+ * Accepts an array of user ids, if empty array is passed,
+ * it will remove all the collaborators from the project
+ */
+export const updateCollaborators = async (req: Request, res: Response) => {
+	const { collaborators } = req.body;
+
+	if (collaborators?.length) {
+		const validCollaborators = collaborators.every((collaborator: string) =>
+			validObjectId(collaborator)
+		);
+
+		if (!validCollaborators)
+			return res.status(400).send(
+				generateResponse({
+					requestType: "OTHER",
+					responseType: "error",
+					code: 400,
+					message: "Invalid user ids",
+				})
+			);
+	}
+
+	const project = await Project.findByIdAndUpdate(
+		req.params.id,
+		{
+			$set: {
+				collaborators: [...new Set(collaborators)],
+			},
+		},
+		{ new: true }
+	);
+
+	if (!project)
+		return res
+			.status(404)
+			.send(
+				generateResponse({ requestType: "PATCH_1", responseType: "error" })
+			);
+
+	return res.status(200).send(
+		generateResponse({
+			requestType: "PATCH",
+			responseType: "success",
+			items: project,
+		})
+	);
+};
+
+/**
  * Delete a project based on the id
  * If the project is not found, return 404 error
  */
-const deleteProject = async (req: Request, res: Response) => {
+export const deleteProject = async (req: Request, res: Response) => {
 	const project = await Project.deleteOne({ _id: req.params.id });
 
 	if (!project)
@@ -117,12 +169,4 @@ const deleteProject = async (req: Request, res: Response) => {
 			items: project,
 		})
 	);
-};
-
-export {
-	getProjects,
-	getProjectById,
-	createProject,
-	updateProject,
-	deleteProject,
 };

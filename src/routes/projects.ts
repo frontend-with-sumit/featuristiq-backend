@@ -8,6 +8,7 @@ import {
 	deleteProject,
 	getProjectById,
 	getProjects,
+	updateCollaborators,
 	updateProject,
 } from "../controllers/project.controller";
 
@@ -23,6 +24,12 @@ router.patch(
 	"/:id",
 	[validateObjectId, validateBody(validateData)],
 	updateProject
+);
+
+router.patch(
+	"/:id/editCollaborators",
+	[validateObjectId, validateBody(validateData)],
+	updateCollaborators
 );
 
 router.delete("/:id", [validateObjectId], deleteProject);
