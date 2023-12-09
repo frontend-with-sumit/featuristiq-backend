@@ -143,6 +143,7 @@
 				}
 			}
 		},
+
 		"/api/projects": {
 			"get": {
 				"tags": ["Projects"],
@@ -368,6 +369,72 @@
 				}
 			}
 		},
+		"/api/projects/{id}/editCollaborators": {
+			"patch": {
+				"tags": ["Projects"],
+				"operationId": "updateCollaborators",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Unique id of the project",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"collaborators": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "integer",
+											"examples": ["200"]
+										},
+										"data": {
+											"$ref": "#/components/schemas/ProjectResponse"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MessageResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
 		"/api/envs": {
 			"get": {
 				"tags": ["Environments"],
@@ -593,6 +660,7 @@
 				}
 			}
 		},
+
 		"/api/flags": {
 			"get": {
 				"tags": ["Flags"],
@@ -860,7 +928,10 @@
 			"LoginResponse": {
 				"type": "object",
 				"properties": {
-					"token": {
+					"accessToken": {
+						"type": "string"
+					},
+					"refreshToken": {
 						"type": "string"
 					}
 				}
@@ -891,7 +962,9 @@
 					},
 					"phone_number": {
 						"type": "string"
-					}
+					},
+					"created_at": { "type": "string" },
+					"update_at": { "type": "string" }
 				}
 			},
 			"ProjectResponse": {
@@ -905,7 +978,18 @@
 					},
 					"description": {
 						"type": "string"
-					}
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"collaborators": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"created_at": { "type": "string" },
+					"update_at": { "type": "string" }
 				}
 			},
 			"EnvResponse": {
@@ -917,12 +1001,14 @@
 					"name": {
 						"type": "string"
 					},
-					"url": {
+					"domain": {
 						"type": "string"
 					},
-					"projectId": {
+					"project_id": {
 						"type": "string"
-					}
+					},
+					"created_at": { "type": "string" },
+					"update_at": { "type": "string" }
 				}
 			},
 			"FlagResponse": {
@@ -1009,10 +1095,10 @@
 					"name": {
 						"type": "string"
 					},
-					"url": {
+					"domain": {
 						"type": "string"
 					},
-					"projectId": {
+					"project_id": {
 						"type": "string"
 					}
 				}
