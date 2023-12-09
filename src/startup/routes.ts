@@ -25,19 +25,19 @@ export default function routes(app: Express) {
 	app.use("/api/auth", authRoutes);
 	app.use("/api/user", userRoutes);
 
+	app.use(auth);
 	/**
-	 * Project
+	 * Flags
 	 */
-	app.use("/api/projects", projectRoutes);
+	app.use("/api/flags", flagRoutes);
 
 	/**
 	 * Environment
 	 */
 	app.use("/api/envs", envRoutes);
 
-	app.use(auth);
 	/**
-	 * Flags
+	 * Project
 	 */
-	app.use("/api/flags", flagRoutes);
+	app.use("/api/projects", projectRoutes);
 }
