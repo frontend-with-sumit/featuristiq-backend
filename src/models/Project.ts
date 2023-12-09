@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import mongoose, { Document, Schema } from "mongoose";
 import { z } from "zod";
 import Flag from "./Flag";
@@ -8,13 +7,15 @@ interface Project extends Document {
 	name: string;
 	description?: string;
 	created_by: string;
+	collaborators: string[];
 }
 
 const projectSchema = new Schema(
 	{
 		name: { type: String, required: true, trim: true },
 		description: { type: String, trim: true },
-		created_by: { type: mongoose.Schema.Types.ObjectId, required: true },
+		created_by: { type: Schema.Types.ObjectId, required: true },
+		collaborators: { type: [Schema.Types.ObjectId], default: [] },
 	},
 	{
 		versionKey: false,
@@ -40,6 +41,7 @@ const Project = mongoose.model<Project>("Project", projectSchema);
 const projectValidationSchema = z.object({
 	name: z.string({ required_error: "Name is required" }).min(5).max(255).trim(),
 	description: z.string().min(5).max(255).trim().optional(),
+	collaborators: z.array(z.string()).optional(),
 });
 
 /**

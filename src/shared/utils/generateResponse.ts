@@ -60,13 +60,20 @@ const responseWithData = ({
 
 const generateSuccessResponse = (
 	requestType: Requests,
-	items: Array<object> | object
+	items: Array<object> | object,
+	code?: number,
+	message?: string
 ): Response => {
 	switch (requestType) {
 		case "DELETE":
 			return responseWithMessage({
 				code: SuccessCode[requestType],
 				message: "The item deleted successfully",
+			});
+		case "OTHER":
+			return responseWithMessage({
+				code,
+				message,
 			});
 		default:
 			return responseWithData({
@@ -136,7 +143,7 @@ const generateResponse = ({
 	errors?: ErrorDetail[];
 }) => {
 	return responseType === "success"
-		? generateSuccessResponse(requestType, items)
+		? generateSuccessResponse(requestType, items, code, message)
 		: generateErrorResponse(requestType, errors, code, message);
 };
 
